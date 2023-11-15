@@ -56,7 +56,7 @@ async function addIncome() {
     const formattedDate = moment(dateValue, 'DD-MM-YYYY').format('YYYY-MM-DD')
 
     console.log('Lähetetään POST-pyyntö:')
-    console.log('URL: http://localhost:5500/incomes')
+    console.log('URL: https://budjettisovellus-8cmc.onrender.com/incomes')
     console.log('Body:', JSON.stringify({
       income: incomeValue,
       category: incomeCategory,
@@ -66,7 +66,7 @@ async function addIncome() {
     }))
 
     try {
-      const response = await fetch('http://localhost:5500/incomes', {
+      const response = await fetch('https://budjettisovellus-8cmc.onrender.com/incomes', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -100,7 +100,7 @@ function calculateNetIncome(income, taxRate) {
 
 async function loadIncomes() {
   try {
-    const response = await fetch('http://localhost:5500/incomes');
+    const response = await fetch('https://budjettisovellus-8cmc.onrender.com/incomes');
 if (!response.ok) {
   throw new Error('Error loading incomes: ' + response.statusText);
 }
@@ -154,7 +154,7 @@ async function addPayment() {
   const formattedDate = moment(dateValue, 'DD-MM-YYYY').format('YYYY-MM-DD')
 
   try {
-    const response = await fetch('http://localhost:5500/payments', {
+    const response = await fetch('https://budjettisovellus-8cmc.onrender.com/payments', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -181,7 +181,7 @@ async function addPayment() {
 
 async function loadPayments() {
   try {
-    const response = await fetch('http://localhost:5500/payments')
+    const response = await fetch('https://budjettisovellus-8cmc.onrender.com/payments')
     const payments = await response.json()
     showPayments(payments);
   } catch (error) {
