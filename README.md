@@ -16,11 +16,13 @@ Aikaa käytetty kaiken kaikkiaan:
 9.11. MondoDB:hen tuntitehtäviä varten tehdyn DemoClusterin alle database "Budjettisovellus" ja sen alle collection "transactions" tuloille ja menoille. Npm init- komennolla aloitetaan sovelluksen luonti, asennettaan (npm install) node, express, mongoose ja cors. Luotu schemat ja niitä käyttävät mallit, jotka vastaavat MongoDB:hen luotuja dokumentteja.
 MongoDB- tietokanta yhdistetty index.js- tiedostoon. Kopioin pohjan Harjoitukset8- materiaalista. Tehty post.rest- tiedosto ja testattu tietojen lisäämistä tietokantaa, mikä onnistui! Lisäksi testattu, että tiedot päivittyivät index.html- sivulle. Aikaa käytetty 5h.
 
-11.11.
+11.11. Muutoksia suunnitelmiin. En saanut tallentamaan "Budjettisovellus"-tietokantaan enkä muutettua sitä primary tietokannaksi, joten tällä hetkellä tallennukset menee test- tietokannan alle. (En uskaltanut poistaa test-tietokantaa, kun olen käyttänyt sitä osassa harjoitustehtävistä). Tein funktio(?) calculateNetIncome, jolla käyttäjän syöttämän bruttotulon ja veroprosentin perusteella lasketaan nettotulo omaan kenttäänsä. 4h
 
-13.11.
+13.11. Taistelua päivämäärän kanssa. MungoDB haluaa tallentaa päivämäärän muodossa esim. 2009-09-09T00:00:00.000Z ja jostain syystä muuttaa antamani päivämäärän aina kuukaudella taaksepäin. Kategoria ei tulojen tapauksessa tallennu oikein, lisäsin sen vasta nyt, joten todennäköisesti jotain on unohtunut laittaa tai tietokanta kettuilee. 3h
 
-14.11.
+14.11. Kuin taikaiskusta tänään kun käynnistin kaiken uudelleen, tulojen kategoriat tallentuvat oikein eli vaati vissiin vain uudelleen käynnistyksen, vaikka eilen tämän kanssa kamppailin kauan. Päivämäärä tallentuu edelleen tietokannan haluamassa muodossa, mutta sentään ei heitä enää kuukaudella syöttämästäni päivämäärästä. Kokeilin niin paljon eri keinoja, etten ole varma auttoiko tämä: const formattedDate = moment(dateValue, 'DD-MM-YYYY').format('YYYY-MM-DD') vai alkoiko tämä vain myös uudelleenkäynnistyksen myötä toimia itsekseen oikein. Nyt käyttäjä voi kuitenkin syöttää päivämäärän muodossa DD-MM-YYYY ja se tallentuu oikein. Lisäsin tulojen kategorioille pudotusvalikon, josta valita jokin valmiiksi annetuista kategorioista. Tämä toivon mukaan helpottaa myöhemmin tulojen etsimistä kategorian avulla. Ulkonäön muokkaamista, yms. 5h
+
+15.11. 
 
 
 
