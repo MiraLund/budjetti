@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budjetin Seuranta</title>
+  <!-- Lisää tarvittaessa muita tyylitiedostoja tai kirjastoja tässä -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="init()">
+  <div id="container" style="width:100%;">
+    <h1>Budjetin Seuranta</h1>
+
+    <div id="incomeSection">
+      <h2>Tulot</h2>
+      <input id="income" type="text" placeholder="Tulo" required> 
+      <input id="netIncome" type="text" placeholder="Nettotulo" required>
+      <input id="taxRate" type="text" placeholder="Veroprosentti" required>     
+      <select id="incomeCategory" required>
+        <option value="" disabled selected>Kategoria</option>
+        <option value="palkka">Palkka</option>
+        <option value="tuki">Tuki</option>
+        <option value="velka">Velka</option>
+        <option value="lahja">Lahja</option>
+        <option value="muut">Muut</option>
+      <input id="incomeDate" type="text" placeholder="DD-MM-YYYY" required>
+      <button id="buttonIncome" onClick="addIncome()">Lisää tulo</button>
+      <ul id="incomeList"></ul>
+    </div>
+
+ <div id="paymentSection">
+  <h2>Maksut</h2>
+  <input id="paymentDescription" type="text" placeholder="Kuvaus" required>
+  <input id="paymentAmount" type="text" placeholder="Määrä" required>
+  <select id="paymentCategory" required>
+    <option value="" disabled selected>Kategoria</option>
+    <option value="vuokra">Vuokra</option>
+    <option value="sahko">Sähköt</option>
+    <option value="vesi">Vesi</option>
+    <option value="ruoka">Ruoka</option>
+    <option value="koti">Kodin tarvikkeet</option>
+    <option value="elektroniikka">Elektroniikka</option>
+    <option value="tilaukset">Suoratoistopalvelut, yms tilaukset</option>
+    <option value="muut">Muut</option>
+  <input id="paymentDate" type="text" placeholder="DD-MM-YYYY" required>
+  <button id="buttonPayment" onClick="addPayment()">Lisää maksu</button>
+  <ul id="paymentList"></ul>
+</div>
+
+
+    <div id="searchSection" style="width: 50%; float: left;">
+      <h2>Haku</h2>
+      
+      <input id="searchbar" type="text" placeholder="hakusana">
+      <ul id="searchResults"></ul>
+    </div>
+  </div>
+
+  <script src="code.js"></script>
+  <!-- Lisää tämä koodi HTML-tiedoston head-osioon -->
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+</body>
+</html>

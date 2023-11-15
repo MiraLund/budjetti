@@ -1,0 +1,73 @@
+body {
+    width:80%;
+    font-family: 'Oswald', sans-serif;
+    background-color: #c5c9a4;
+}
+  
+#container {
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+   /* align-items: center;*/
+    text-align: center;
+    background-color: #a2bda0;
+    margin: 0 auto;
+}
+  
+#incomeSection,  #paymentSection, #searchSection {
+    flex-basis: 50%; 
+    box-sizing: border-box;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+
+#incomeCategory, #paymentCategory {
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 312px;
+  font-size: 15px;
+}
+
+#incomeCategory:focus, #incomeCategory:active, #paymentCategory:focus, #paymentCategory:active {
+  border: 1px solid #ccc; 
+}
+
+#income:focus, #income:active {
+  border: 1px solid #ccc;
+}
+h1 {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #4c847d;
+  text-align: center;
+  color: white;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+  
+ul {
+  list-style-type: square;
+  margin: 20px 0 20px 0;
+}
+  
+input[type=text] {
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 300px;
+  font-size: 15px;
+}
+  
+button {
+  border: 1px solid #ccc;
+  margin-left: 15px;
+  padding: 5px 15px;
+  font-size: 15px;
+  cursor: pointer;
+}
+  
+.delete {
+  cursor: pointer;
+  color: red;
+  font-weight: bold;
+}

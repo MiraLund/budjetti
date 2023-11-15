@@ -1,0 +1,20 @@
+{
+  "name": "budjettisovellus",
+  "version": "1.0.0",
+  "description": "Budjetointisovellus",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mira Lund",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "moment": "^2.29.4",
+    "mongoose": "^8.0.0",
+    "node": "^21.1.0"
+  }
+}

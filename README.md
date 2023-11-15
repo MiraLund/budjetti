@@ -1,6 +1,63 @@
-# Budjetti
+# Budjettisovellus
+
+Toiminnot:
+- tulojen lisääminen
+- menojen lisääminen
+    - menoille eri labelit tms
+    - joka kuun lopuksi kuinka paljon rahaa mihinkin asiaan on mennyt
+- budjettitavoite
+- säästötavoite ?
+- raporttien generointi
+
+Aloitus 9.11.2023
+
+Aikaa käytetty kaiken kaikkiaan: 
+
+9.11. MondoDB:hen tuntitehtäviä varten tehdyn DemoClusterin alle database "Budjettisovellus" ja sen alle collection "transactions" tuloille ja menoille. Npm init- komennolla aloitetaan sovelluksen luonti, asennettaan (npm install) node, express, mongoose ja cors. Luotu schemat ja niitä käyttävät mallit, jotka vastaavat MongoDB:hen luotuja dokumentteja.
+MongoDB- tietokanta yhdistetty index.js- tiedostoon. Kopioin pohjan Harjoitukset8- materiaalista. Tehty post.rest- tiedosto ja testattu tietojen lisäämistä tietokantaa, mikä onnistui! Lisäksi testattu, että tiedot päivittyivät index.html- sivulle. Aikaa käytetty 5h.
+
+11.11.
+
+13.11.
+
+14.11.
 
 
+
+Tehtävät:
+Tee lista toiminnoista, joita haluat budjettisovelluksesi sisältävän. 
+
+Tietokantamalli:
+Suunnittele MongoDB-tietokantamalli, joka tukee tarpeitasi. Kokoelma "transactions" tuloille ja menoille.
+
+Aloita Backend-kehitys:
+Käytä Node.js:ää ja Express.js:ää backendin luomiseen.
+Määrittele tarvittavat reitit (endpoints) tulojen ja menojen lisäämiseen, poistamiseen ja hakemiseen tietokannasta.
+
+Yhdistä MongoDB:
+Käytä MongoDB-tietokantaa tallentamaan käyttäjän tuloja ja menoja.
+Mongoose-kirjasto helpottamaan tietokannan käsittelyä?
+
+Frontend-kehitys:
+Käytä Reactia frontendin rakentamiseen.
+Luo käyttöliittymä tulojen ja menojen lisäämiseen ja näyttämiseen.
+
+Yhdistä Frontend ja Backend:
+Käytä HTTP-pyyntöjä (esim. Axios) yhdistämään frontend ja backend.
+Varmista, että tiedot lähetetään oikein backendiin ja päinvastoin.
+
+Käyttäjätilit ja Autentikointi:
+Tehdäänkö käyttäjätilit?
+Lisää käyttäjien hallinta ja autentikointi, jotta jokainen käyttäjä voi pitää oman budjettinsa.
+
+Budjettitavoitteet ja Raportit:
+Lisää mahdollisuus asettaa budjettitavoitteita ja generoida raportteja kulujen ja tulojen kehityksestä.
+
+Testaa Sovellus:
+Testaa sovellusta varmistaaksesi, että kaikki toimii odotetusti.
+
+Julkaise Sovellus Herokuun:
+Kun sovellus on valmis, voit julkaista sen Herokuun ja antaa muidenkin kokeilla sitä.
 
 ## Getting started
 
@@ -15,14 +72,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.labranet.jamk.fi/AD0924/budjetti.git
+git remote add origin https://gitlab.labranet.jamk.fi/AD0924/budjettisovellus.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.labranet.jamk.fi/AD0924/budjetti/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.labranet.jamk.fi/AD0924/budjettisovellus/-/settings/integrations)
 
 ## Collaborate with your team
 
