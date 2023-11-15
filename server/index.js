@@ -2,7 +2,7 @@ const express = require('express')
 const asyncErrors = require('express-async-errors')
 const cors = require('cors')
 const app = express()
-const port = process.env.PORT || 5500
+const port = process.env.PORT || 10000
 
 app.use(cors());
 
@@ -171,7 +171,7 @@ app.delete('/reports/:id', async (request, response) => {
   }
 });
 
-// app listen port 5500
+// app listen port 10000
 app.listen(port, () => {
-  console.log('Example app listening on port 5500')
+  console.log('Example app listening on port 10000')
 })
