@@ -3,6 +3,12 @@ const asyncErrors = require('express-async-errors')
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 10000
+const path = require('path')
+
+
+// Serve static files from the "client" directory
+app.use(express.static(path.join(__dirname, 'client')));
+
 
 app.use(cors());
 
@@ -54,9 +60,10 @@ const reportSchema = new mongoose.Schema({
 
 const Report = mongoose.model('Report', reportSchema)
 
-app.get('/', (req, res) => {
-  res.send('Tervetuloa budjettisovellukseen!');
-})
+// Always serve the index.html for any unknown paths
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
 
 // Income Routes
 app.post('/incomes', async (request, response) => {
