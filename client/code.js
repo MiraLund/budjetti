@@ -68,7 +68,7 @@ async function addIncome() {
     try {
       const response = await fetch('https://budjetti-back.onrender.com/incomes', {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'omit',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -156,7 +156,7 @@ async function addPayment() {
   try {
     const response = await fetch('https://budjetti-back.onrender.com/payments', {
       method: 'POST',
-      credentials: 'include',
+      credentials: 'omit',
       headers: {
         'Content-Type': 'application/json'
       },
