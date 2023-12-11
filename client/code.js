@@ -3,7 +3,7 @@ var allIncomes = []
 var newIncomes = []
 var allPayments = []
 var newPayments = []
-url = 'https://budjetti-back.onrender.com'
+const url = 'https://budjetti-back.onrender.com'
 
 function init() {
   console.log('Initializing the application...')
