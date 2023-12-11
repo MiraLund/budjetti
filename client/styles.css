@@ -1,47 +1,118 @@
 body {
+    margin: auto;
     width:80%;
     font-family: 'Oswald', sans-serif;
-    background-color: #c5c9a4;
+    background-color: #e6e9ff;
+}
+
+.center {
+  margin: auto;
+  width: 60%;
+  border: 3px solid #8e9aaf;
+  padding: 10px;
 }
   
 #container {
-    width: 60%;
+    width: 80%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-   /* align-items: center;*/
     text-align: center;
-    background-color: #a2bda0;
+    background-color: #DEE2FF;
     margin: 0 auto;
-}
-  
-#incomeSection,  #paymentSection, #searchSection {
+    overflow: visible;
+} *
+
+#incomeSection, #paymentSection {
+  flex-direction: column;
     flex-basis: 50%; 
-    box-sizing: border-box;
-    padding: 0 10px;
     margin-bottom: 20px;
+} */
+
+
+#incomeForm, #paymentForm {
+  min-height: 200px; 
 }
 
-#incomeCategory, #paymentCategory {
+#incomeCards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; 
+}
+
+.card {
+  width: 60%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px; 
+  margin: auto;
+  margin-bottom: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+  color: #333;
+}
+
+.card p {
+  color: #666;
+}
+
+.card .delete-button {
+  color: rgb(119, 10, 10);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.card .delete-button:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  display: none; 
+  color: rgb(119, 10, 10); 
+}
+
+#income, #netIncome, #taxRate, #incomeCategory, #incomeDate, #incomeCategorySearch, #incomeDateSearch {
+  box-sizing: border-box; 
   border: 1px solid #ccc;
   padding: 5px;
-  width: 312px;
+  width: 60%; 
   font-size: 15px;
+  margin-bottom: 5px; 
 }
 
-#incomeCategory:focus, #incomeCategory:active, #paymentCategory:focus, #paymentCategory:active {
-  border: 1px solid #ccc; 
-}
-
-#income:focus, #income:active {
+#paymentAmount, #paymentDescription, #paymentCategory, #paymentDate, #paymentCategorySearch, #paymentDateSearch {
+  box-sizing: border-box;
   border: 1px solid #ccc;
+  padding: 5px;
+  width: 60%;
+  font-size: 15px;
+  margin-bottom: 5px; 
 }
+
+
+#income:focus, #taxRate:focus, #incomeCategory:focus, #incomeDate:focus, #paymentAmount:focus, #paymentDescription:focus, #paymentCategory:focus, #paymentDate:focus {
+  border: 1px solid #ccc; 
+  outline: none;
+}
+
+#incomeForm, #paymentForm {
+  scroll-margin-top: 20px;
+}
+
 h1 {
   width: 100%;
   box-sizing: border-box;
-  background-color: #4c847d;
+  background-color: #cbc0d3;
   text-align: center;
-  color: white;
+  color: black;
   padding: 5px;
   margin-bottom: 20px;
 }
@@ -57,7 +128,7 @@ input[type=text] {
   width: 300px;
   font-size: 15px;
 }
-  
+
 button {
   border: 1px solid #ccc;
   margin-left: 15px;
@@ -66,8 +137,6 @@ button {
   cursor: pointer;
 }
   
-.delete {
-  cursor: pointer;
-  color: red;
-  font-weight: bold;
-}
+.edit-button {
+  margin-right: 10px;
+} 
