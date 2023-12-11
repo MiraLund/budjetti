@@ -4,61 +4,132 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Budjetin Seuranta</title>
-  <!-- Lisää tarvittaessa muita tyylitiedostoja tai kirjastoja tässä -->
+
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="code.js"></script>
+  <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 </head>
-<body onload="init()">
+<body>
   <div id="container" style="width:100%;">
     <h1>Budjetin Seuranta</h1>
 
-    <div id="incomeSection">
-      <h2>Tulot</h2>
-      <input id="income" type="text" placeholder="Tulo" required> 
-      <input id="netIncome" type="text" placeholder="Nettotulo" required>
-      <input id="taxRate" type="text" placeholder="Veroprosentti" required>     
-      <select id="incomeCategory" required>
+    <!-- Tulojen section -->
+    <section id="incomeSection">
+      <form id="incomeForm">
+        <h2>Tulot</h2>
+        <input id="income" name="income" type="number" placeholder="Tulo" required> 
+        <!-- Incomen error-viesti -->
+        <div id="errorIncome" class="error-message"></div>
+        <input id="netIncome" name="netIncome" type="number" placeholder="Nettotulo" disabled>
+        <!-- netIncomelle ei erroria, koska lasketaan automaattisesti käyttäjän syöttämän tulon ja veroprosentin perusteella,
+        käyttäjä ei pysty itse edes laittamaan kenttään mitään, koska "disabled" -->
+        <input id="taxRate" name="taxRate" type="number" placeholder="Veroprosentti" required>
+        <!-- TaxRaten error-viesti -->
+        <div id="errorTaxRate" class="error-message"></div>     
+        <select id="incomeCategory" name="incomeCategory" required>
+          <option value="" disabled selected>Kategoria</option>
+          <option value="palkka">Palkka</option>
+          <option value="tuki">Tuki</option>
+          <option value="velka">Velka</option>
+          <option value="lahja">Lahja</option>
+          <option value="muut">Muut</option>
+        </select>
+        <!-- Incomen kategorian error-viesti -->
+        <div id="errorIncomeCategory" class="error-message"></div>
+        <input id="incomeDate" name="incomeDate" type="date" required>
+        <div id="errorIncomeDate" class="error-message"></div>
+        <br /><br />
+        <!-- Nappi incomeFormButton, kutsuu addIncome()-funktiota -->
+        <button type="button" id="incomeFormButton" onclick="addIncome()">Lisää tulo</button>
+      </form>
+      <br /><br />
+      <!-- Incomen card-container, "kortit" tulevat tähän -->
+      <div id="incomeCards" class="card-container"></div>
+
+    <!-- Tulojen haku -->
+      <form id="incomeSearchForm">
+        <h2>Haku</h2>
+        <label for="incomeCategorySearch">Valitse tulojen kategoria ja päivämäärä:</label>
+        <br />
+        <select id="incomeCategorySearch">
+          <option value="">Kaikki</option>
+          <option value="palkka">Palkka</option>
+          <option value="tuki">Tuki</option>
+          <option value="velka">Velka</option>
+          <option value="lahja">Lahja</option>
+          <option value="muut">Muut</option>
+        </select>
+        
+        <input type="month" id="incomeDateSearch">
+        <!-- Incomen haku error-viesti, yksi molemmille kentille -->
+        <div id="errorIncomeSearch" class="error-message"></div>
+        <br /><br />
+        <!-- IncomeSearchButton, kutsuu searchIncomes()-funktiota -->
+        <button type="button" id="incomeSearchButton" onclick="searchIncomes()">Hae tuloja</button>
+      </form><br />
+      <!-- Näytetään Income hakutulokset -->
+    <div id="searchIncomeResults"></div>
+  </section>
+
+  <!-- Maksujen section -->
+  <section id="paymentSection">
+    <form id="paymentForm">
+      <h2>Maksut</h2>
+      <input id="paymentAmount" name="paymentAmount" type="number" placeholder="Määrä" required>
+      <!-- PaymentAmountin error-viesti -->
+      <div id="errorAmount" class="error-message"></div>
+      <input id="paymentDescription" name="paymentDescription" type="text" placeholder="Meno (kuvaus)">
+      <!-- Descriptionille ei erroria, koska ei ole pakollinen kenttä -->
+      <select id="paymentCategory" name="paymentCategory" required>
         <option value="" disabled selected>Kategoria</option>
-        <option value="palkka">Palkka</option>
-        <option value="tuki">Tuki</option>
-        <option value="velka">Velka</option>
-        <option value="lahja">Lahja</option>
+        <option value="asuminen">Asuminen</option>
+        <option value="ruoka">Ruoka</option>
+        <option value="koti">Kodin tarvikkeet</option>
+        <option value="elektroniikka">Elektroniikka</option>
+        <option value="tilaukset">Suoratoistopalvelut, yms tilaukset</option>
         <option value="muut">Muut</option>
-      <input id="incomeDate" type="text" placeholder="DD-MM-YYYY" required>
-      <button id="buttonIncome" onClick="addIncome()">Lisää tulo</button>
-      <ul id="incomeList"></ul>
-    </div>
+      </select>
+      <!-- PaymentCategoryn error-viesti -->
+      <div id="errorPaymentCategory" class="error-message"></div>
+      <input id="paymentDate" name="paymentDate" type="date" required>
+      <!-- PaymentDaten error-viesti -->
+      <div id="errorPaymentDate" class="error-message"></div>
+      <br /><br />
+      <!-- PaymentFormButton, joka kutsuu addPayment()-funktiota -->
+      <button type="button" id="paymentFormButton" onclick="addPayment()">Lisää maksu</button>
+    </form>
+    <br /><br />
+    <!-- Tähän tulee maksujen "kortit" -->
+    <div id="paymentCards" class="card-container"></div>
+    <br /><br />
 
- <div id="paymentSection">
-  <h2>Maksut</h2>
-  <input id="paymentDescription" type="text" placeholder="Kuvaus" required>
-  <input id="paymentAmount" type="text" placeholder="Määrä" required>
-  <select id="paymentCategory" required>
-    <option value="" disabled selected>Kategoria</option>
-    <option value="vuokra">Vuokra</option>
-    <option value="sahko">Sähköt</option>
-    <option value="vesi">Vesi</option>
-    <option value="ruoka">Ruoka</option>
-    <option value="koti">Kodin tarvikkeet</option>
-    <option value="elektroniikka">Elektroniikka</option>
-    <option value="tilaukset">Suoratoistopalvelut, yms tilaukset</option>
-    <option value="muut">Muut</option>
-  <input id="paymentDate" type="text" placeholder="DD-MM-YYYY" required>
-  <button id="buttonPayment" onClick="addPayment()">Lisää maksu</button>
-  <ul id="paymentList"></ul>
+  <!-- Menojen haku -->
+<form id="paymentSearchForm">
+  <h2>Haku</h2>
+    <label for="paymentCategorySearch">Valitse menojen kategoria ja päivämäärä:</label>
+    <br />
+    <select id="paymentCategorySearch">
+      <option value="">Kaikki</option>
+      <option value="asuminen">Asuminen</option>
+      <option value="ruoka">Ruoka</option>
+      <option value="kodinTarvikkeet">Kodin tarvikkeet</option>
+      <option value="elektroniikka">Elektroniikka</option>
+      <option value="tilaukset">Suoratoistopalvelut, yms tilaukset</option>
+      <option value="muut">Muut</option>
+    </select>
+
+<input type="month" id="paymentDateSearch">
+<!-- PaymentSearchin error-viesti, molemmille kentille yhteinen -->
+<div id="errorPaymentSearch" class="error-message"></div>
+<br /><br />
+<!-- PaymentSearchButton, joka kutsuu searchPayments()-funktiota -->
+<button type="button" id="paymentSearchButton" onclick="searchPayments()">Hae menoja</button>
+</form><br />
+<!-- Tässä näytetään maksujen haun tulokset -->
+<div id="searchPaymentResults"></div>
+</section>
 </div>
-
-
-    <div id="searchSection" style="width: 50%; float: left;">
-      <h2>Haku</h2>
-      
-      <input id="searchbar" type="text" placeholder="hakusana">
-      <ul id="searchResults"></ul>
-    </div>
-  </div>
-
-  <script src="code.js"></script>
-  <!-- Lisää tämä koodi HTML-tiedoston head-osioon -->
-<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-
+<br />
 </body>
 </html>
