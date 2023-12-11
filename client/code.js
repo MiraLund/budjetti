@@ -3,7 +3,7 @@ var allIncomes = []
 var newIncomes = []
 var allPayments = []
 var newPayments = []
-const url = 'https://budjetti-back.onrender.com'
+const siteUrl = 'https://budjetti-back.onrender.com'
 
 function init() {
   console.log('Initializing the application...')
@@ -98,7 +98,7 @@ async function addIncome() {
 
 // Jos kaikki kentät on oikein täytetty, lisätään tulo tietokantaan POST-metodilla 
 try {
-    const response = await fetch(url + '/incomes', {
+    const response = await fetch(siteUrl + '/incomes', {
       method: 'POST',
       credentials: 'omit',
       headers: {
@@ -156,7 +156,7 @@ function showError(errorInput) {
 // Ladataan kaikki tulot tietokannasta, kutsutaan showIncomes-funktiota
 async function loadIncomes() {
   try {
-    let url = url + '/incomes';    
+    let url = siteUrl + '/incomes';    
     const response = await fetch(url)
     allIncomes = await response.json()
    showIncomes()
@@ -230,7 +230,7 @@ function clearIncomeFields() {
 // Funktio, jonka avulla voidaan poistaa tulo DELETE-metodilla
 function deleteIncome(incomeId) {
   try {
-    fetch(url + `/incomes/${incomeId}`, {
+    fetch(siteUrl + `/incomes/${incomeId}`, {
       method: 'DELETE',
     }).then(() => {
       allIncomes = allIncomes.filter(income => income._id !== incomeId)
@@ -279,7 +279,7 @@ function editIncome(income) {
 // Funktio, joka päivittää tulon PUT-metodilla
 async function updateIncome(incomeId, updatedIncomeData) {
   try {
-    const response = await fetch(url + `/incomes/${incomeId}`, {
+    const response = await fetch(siteUrl + `/incomes/${incomeId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -430,7 +430,7 @@ async function addPayment() {
 
   // Jos kaikki kentät on oikein täytetty, lisätään maksu tietokantaan POST-metodilla
   try {
-    const response = await fetch(url + '/payments', {
+    const response = await fetch(siteUrl + '/payments', {
       method: 'POST',
       credentials: 'omit',
       headers: {
@@ -466,7 +466,7 @@ async function addPayment() {
 // Ladataan kaikki maksut tietokannasta, kutsutaan showPayments-funktiota
 async function loadPayments() {
   try {
-    let url = url + '/payments'
+    let url = siteUrl + '/payments'
     const response = await fetch(url)
     allPayments = await response.json()
     showPayments()
@@ -536,7 +536,7 @@ function clearPaymentFields() {
 // Funktio, jonka avulla voidaan poistaa maksu DELETE-metodilla
 function deletePayment(paymentId) {
   try {
-    fetch(url + `/payments/${paymentId}`, {
+    fetch(siteUrl + `/payments/${paymentId}`, {
       method: 'DELETE',
     }).then(() => {
       // Poistetaan maksu allPayments- ja newPayments-muuttujista
@@ -585,7 +585,7 @@ function editPayment(payment) {
 // Funktio, joka päivittää maksun PUT-metodilla
 async function updatePayment(paymentId, updatedPaymentData) {
   try {
-    const response = await fetch(url + `/payments/${paymentId}`, {
+    const response = await fetch(siteUrl + `/payments/${paymentId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
