@@ -1,6 +1,6 @@
-// Luodaan muuttujat, johon tallennetaan kaikki tulot, uudet tulot, kaikki maksut ja uudet maksut
-// allIncomes/allPayments, johon tallennetaan kaikki tulot/maksut
-// newIncomes/newPayments, johon tallennetaan uudet tulot/maksut, 
+// Luodaan muuttujat, joihon tallennetaan kaikki tulot, uudet tulot, kaikki maksut ja uudet maksut
+// allIncomes/allPayments, joihon tallennetaan kaikki tulot/maksut
+// newIncomes/newPayments, joihon tallennetaan uudet tulot/maksut, 
 // koska tuloja/maksuja lisätessä halutaan näyttää käyttäjälle vain juuri lisätyt tulot/maksut
 var allIncomes = []
 var newIncomes = []
@@ -9,7 +9,6 @@ var newPayments = []
 const siteUrl = 'https://budjetti-back.onrender.com'
 
 function init() {
-  console.log('Initializing the application...')
   // Ladataan tulot ja maksut
   loadIncomes()
   loadPayments()
@@ -17,35 +16,7 @@ function init() {
   const incomeInput = document.getElementById('income')
   const taxRateInput = document.getElementById('taxRate')
 
-  // Funktio, jossa lasketaan nettotulo kahden desimaalin tarkkuudella
-function calculateNetIncome(income, taxRate) {
-  console.log('Calculating net income:', income, taxRate)
-  const netIncome = (income - (income * taxRate / 100)).toFixed(2)
-  console.log('Net income:', netIncome)
-  return netIncome
-}
-
-  // Päivittää netIncomeInput-kentän arvon aina kun incomeInput- tai taxRateInput-kenttään syötetään jotain
-  function updateNetIncome() {
-    // const incomeInput = document.getElementById('income')
-    // const taxRateInput = document.getElementById('taxRate')
-    const netIncomeInput = document.getElementById('netIncome')
-    const incomeValue = incomeInput.value 
-    const taxRateValue = taxRateInput.value 
-
-    // Tämä tyhjentää netIncomeInput kentän aina kun, jompikumpi kentistä (income tai taxRate) on tyhjä
-    if (!incomeInput.value || !taxRateInput.value) {
-      netIncomeInput.value = ''
-      return
-    }
-  
-    // Lasketaan nettotulo ja asetetaan se netIncomeInput-kenttään
-    const calculatedNetIncome = calculateNetIncome(incomeValue, taxRateValue)
-    netIncomeInput.value = calculatedNetIncome
-  }
-  
-
-  // Lisätään kuuntelija, joka kutsuu updateNetIncome-funktiota aina kun incomeInput- tai taxRateInput-kenttään syötetään jotain 
+  // Lisätään kuuntelijat, jotka kutsuvat updateNetIncome-funktiota aina kun incomeInput- tai taxRateInput-kenttään syötetään jotain 
   // = Käyttäjä näkee heti syötetyillä arvoilla lasketun nettotulon
   incomeInput.addEventListener('input', updateNetIncome)
   taxRateInput.addEventListener('input', updateNetIncome)
@@ -53,9 +24,35 @@ function calculateNetIncome(income, taxRate) {
   console.log('Application initialized.')
 }
 
+// Kutsuu init-funktiota, kun sivu on ladannut
 document.addEventListener('DOMContentLoaded', init)
 
-// Lisätään yleinen kuuntelija errorInputs-kentille, eli jos jokin kentistä on tyhjä, näytetään virheilmoitus
+  // Funktio, jossa lasketaan nettotulo kahden desimaalin tarkkuudella
+  function calculateNetIncome(income, taxRate) {
+    const netIncome = (income - (income * taxRate / 100)).toFixed(2)
+    return netIncome
+  }
+  
+// Päivittää netIncomeInput-kentän arvon aina kun incomeInput- tai taxRateInput-kenttään syötetään jotain
+function updateNetIncome() {
+  const incomeInput = document.getElementById('income')
+  const taxRateInput = document.getElementById('taxRate')
+  const netIncomeInput = document.getElementById('netIncome')
+  const incomeValue = incomeInput.value 
+  const taxRateValue = taxRateInput.value 
+  
+  // Tämä tyhjentää netIncomeInput kentän aina kun, jompikumpi kentistä (income tai taxRate) on tyhjä
+  if (!incomeInput.value || !taxRateInput.value) {
+    netIncomeInput.value = ''
+    return
+  }
+    
+  // Lasketaan nettotulo ja asetetaan se netIncomeInput-kenttään
+  const calculatedNetIncome = calculateNetIncome(incomeValue, taxRateValue)
+  netIncomeInput.value = calculatedNetIncome
+}
+
+// Lisätään yleinen kuuntelija errorInputs-kentille, eli jos jokin kentistä on tyhjä kutsutaan showError-funktiota
 function addInputListeners(form, errorInputs) {
   form.addEventListener('input', function (event) {
     const inputId = event.target.id
@@ -71,9 +68,9 @@ function showError(errorInput) {
     return;
   }
 
-  // ?-merkki tarkoittaa, että jos errorInput.inputElementillä ei ole arvoa(value), niin value on null
-  // Jos arvo on null, niin errorInput.hasError arvo on true
+  // ?-merkki tarkoittaa, että jos errorInput.inputElement on olemassa, niin value on inputElementin value, jos ei niin sitte value on null
   const value = errorInput.inputElement ? errorInput.inputElement.value : null;
+  // Jos arvo on null, niin errorInput.hasError arvo on true
   errorInput.hasError = !value;
 
   if (errorInput.hasError) {
@@ -148,8 +145,8 @@ async function addIncome() {
     return
   }
 
-// Jos kaikki kentät on oikein täytetty, lisätään tulo tietokantaan POST-metodilla 
-try {
+  // Jos kaikki kentät on oikein täytetty, lisätään tulo tietokantaan POST-metodilla 
+  try {
     const response = await fetch(siteUrl + '/incomes', {
       method: 'POST',
       credentials: 'omit',
@@ -169,7 +166,6 @@ try {
       throw new Error('Server responded with an error')
     }
     const income = await response.json()
-    console.log('Income added:', income)
     // Lisätään tulo allIncomes- ja newIncomes-muuttujiin
     allIncomes.push(income)
     newIncomes.push(income)
@@ -198,7 +194,7 @@ async function loadIncomes() {
 
 // Funktio, joka näyttää tulot käyttäjälle
 function showIncomes(cardContainer = null, filteredIncomes = null) {
-  // Jos cardContainer ei ole null käytetään sitä ja haetaan id:n perusteella paymentCards-elementti
+  // Jos cardContainer on null niin haetaan incomeCards-elementti cardContainer-muuttujaan
   if (!cardContainer) { cardContainer = document.getElementById('incomeCards')}
   cardContainer.innerHTML = ''
 
@@ -295,7 +291,7 @@ function editIncome(income) {
   // Luodaan muuttuja incomeFormButton, joka hakee id:n perusteella incomeFormButton-elementin ja muuttaa siihen tekstiksi "Tallenna muutokset"
   const incomeFormButton = document.getElementById('incomeFormButton')
   incomeFormButton.textContent = 'Tallenna muutokset'
-  // Kun painetaan "Tallenna muutokset"-nappia, kutsutaan funktiota updateIncome, joka päivittää tulon
+  // Määritetään painikkeen toiminta klikatessa
   incomeFormButton.onclick = function () {
     // Tarkistetaan napin nykyinen teksti, jotta voidaan päättää onko kyseessä "update" vai "add"
     if (incomeFormButton.textContent === 'Tallenna muutokset') {
@@ -335,14 +331,13 @@ async function updateIncome(incomeId, updatedIncomeData) {
 
     const updatedIncome = await response.json()
 
-    // Päivitetään vanha tulo uudella, päivitetyllä tulolla
-    // Lisätään uusi tulo allIncomes-muuttujaan
+    // Päivitetään tulo allIncomes-muuttujaan
     const index = allIncomes.findIndex((income) => income._id === updatedIncome._id)
     if (index !== -1) {
       allIncomes[index] = updatedIncome
     }
 
-    // Lisätään uusi tulo newIncomes-muuttujaan
+    // Päivitetään tulo newIncomes-muuttujaan
     const newIndex = newIncomes.findIndex((income) => income._id === updatedIncome._id)
     if (newIndex !== -1) {
       newIncomes[newIndex] = updatedIncome
@@ -413,7 +408,7 @@ async function searchIncomes() {
 
 // Lisätään maksu
 async function addPayment() {
-  // Haetaan incomeForm, jossa on kaikki input-kentät ja tallennetaan ne muuuttujiin
+  // Haetaan paymentForm, jossa on kaikki input-kentät ja tallennetaan ne muuuttujiin
   const paymentForm = document.getElementById('paymentForm')
   const amountValue = paymentForm.paymentAmount.value
   const descriptionValue = paymentForm.paymentDescription.value
@@ -466,7 +461,6 @@ async function addPayment() {
       throw new Error('Server responded with an error')
     }
     const payment = await response.json()
-    console.log('Payment added:', payment)
     // Lisätään maksu allPayments- ja newPayments-muuttujiin
     allPayments.push(payment)
     newPayments.push(payment)
@@ -495,13 +489,13 @@ async function loadPayments() {
 
 // Funktio, joka näyttää maksut käyttäjälle
 function showPayments(cardContainer = null, filteredPayments = null) {
-  // Jos cardContainer ei ole null käytetään sitä ja haetaan id:n perusteella paymentCards-elementti
+   // Jos cardContainer on null niin haetaan paymentCards-elementti cardContainer-muuttujaan
   if (!cardContainer) { cardContainer = document.getElementById('paymentCards')}
   cardContainer.innerHTML = ''
 
    // ?? = jos filteredPayments ei ole null, käytetään sitä, muuten käytetään newPayments-muuttujaa
     // Ts. jos on juuri lisätty menoja, käytetään newPayments-muuttujaa ja näytetään käyttäjälle vain tämän juuri lisäämät maksut
-  // Jos käytetään filteredPayments, näytettään käyttäjälle hakutulokset
+  // Jos käytetään filteredPayments, näytetään käyttäjälle hakutulokset
    const payments = filteredPayments ?? newPayments
   // Jos payments-muuttujassa on jotain (sen pituus on isompi kuin 0)
   // käydään läpi jokainen maksu ja luodaan kortti, joka näyttää maksun tiedot
@@ -626,13 +620,13 @@ async function updatePayment(paymentId, updatedPaymentData) {
 
     const updatedPayment = await response.json()
 
-    // Päivitetään vanha maksu uudella, päivitetyllä maksulla, lisätään uusi maksu allPayments-muuttujaan
+    // Päivitetään maksu allPayments-muuttujaan
     const index = allPayments.findIndex((payment) => payment._id === updatedPayment._id)
     if (index !== -1) {
       allPayments[index] = updatedPayment
     }
 
-    // Lisätään uusi maksu newPayments-muuttujaan
+    // Päivitetään maksu newPayments-muuttujaan
     const newIndex = newPayments.findIndex((payment) => payment._id === updatedPayment._id)
     if (newIndex !== -1) {
       newPayments[newIndex] = updatedPayment
