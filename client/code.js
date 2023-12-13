@@ -1,4 +1,7 @@
 // Luodaan muuttujat, johon tallennetaan kaikki tulot, uudet tulot, kaikki maksut ja uudet maksut
+// allIncomes/allPayments, johon tallennetaan kaikki tulot/maksut
+// newIncomes/newPayments, johon tallennetaan uudet tulot/maksut, 
+// koska tuloja/maksuja lisätessä halutaan näyttää käyttäjälle vain juuri lisätyt tulot/maksut
 var allIncomes = []
 var newIncomes = []
 var allPayments = []
@@ -13,6 +16,14 @@ function init() {
 
   const incomeInput = document.getElementById('income')
   const taxRateInput = document.getElementById('taxRate')
+
+  // Funktio, jossa lasketaan nettotulo kahden desimaalin tarkkuudella
+function calculateNetIncome(income, taxRate) {
+  console.log('Calculating net income:', income, taxRate)
+  const netIncome = (income - (income * taxRate / 100)).toFixed(2)
+  console.log('Net income:', netIncome)
+  return netIncome
+}
 
   // Päivittää netIncomeInput-kentän arvon aina kun incomeInput- tai taxRateInput-kenttään syötetään jotain
   function updateNetIncome() {
@@ -44,14 +55,6 @@ function init() {
 
 document.addEventListener('DOMContentLoaded', init)
 
-// Funktio, jossa lasketaan nettotulo kahden desimaalin tarkkuudella
-function calculateNetIncome(income, taxRate) {
-  console.log('Calculating net income:', income, taxRate)
-  const netIncome = (income - (income * taxRate / 100)).toFixed(2)
-  console.log('Net income:', netIncome)
-  return netIncome
-}
-
 // Lisätään yleinen kuuntelija errorInputs-kentille, eli jos jokin kentistä on tyhjä, näytetään virheilmoitus
 function addInputListeners(form, errorInputs) {
   form.addEventListener('input', function (event) {
@@ -60,8 +63,56 @@ function addInputListeners(form, errorInputs) {
   })
 }
 
+// Funktio, joka näyttää virheilmoituksen, jos kenttä on tyhjä
+function showError(errorInput) {
+  if (!errorInput) {
+    // Jos errorInput on tyhjä, lopeta tässä
+    // Näin käy maksun Description-kentän kanssa, koska se ei ole pakollinen eli sille ei ole errorInputia
+    return;
+  }
+
+  // ?-merkki tarkoittaa, että jos errorInput.inputElementillä ei ole arvoa(value), niin value on null
+  // Jos arvo on null, niin errorInput.hasError arvo on true
+  const value = errorInput.inputElement ? errorInput.inputElement.value : null;
+  errorInput.hasError = !value;
+
+  if (errorInput.hasError) {
+    // Näytetään virheilmoitus
+    errorInput.errorElement.style.display = 'block';
+  } else {
+    // Piilotetaan virheilmoitus
+    errorInput.errorElement.style.display = 'none';
+  }
+}
+
+// Lisätään kuuntelija, joka kutsuu checkSearchInputs-funktiota aina kun hakukenttiin syötetään jotain
+function addSearchInputListener(form, searchInputs) {
+  form.addEventListener('input', function (event) {
+    checkSearchInputs(searchInputs)
+  })
+}
+
+// Funktio checkSearchInputs tarkistaa, ovatko hakukentät tyhjiä
+function checkSearchInputs(searchInputs) {
+  searchInputs.hasError = true
+  searchInputs.inputElements.forEach((input) => {
+    if (input.value) {
+      searchInputs.hasError = false
+    }
+  })
+  // Jos hakukentät tyhjiä (eli hasError = true), näytetään virheilmoitus
+  if (searchInputs.hasError) {
+    searchInputs.errorElement.style.display = 'block'
+  }
+  else {
+    // Jos haku onnistuu (hasError = false), display = none
+    searchInputs.errorElement.style.display = 'none'
+  }
+}
+
 // Funktio tulon lisäämiseksi
 async function addIncome() {
+  // Haetaan incomeForm, jossa on kaikki input-kentät ja tallennetaan ne muuttujiin
   const incomeForm = document.getElementById('incomeForm')
   const incomeValue = incomeForm.income.value
   const netIncomeValue = incomeForm.netIncome.value
@@ -81,7 +132,8 @@ async function addIncome() {
   // Asetetaan oletusarvoisesti hasIncomeError epätodeksi, toisin sanoen ei erroreita
   let hasIncomeError = false
 
-  // Näytetään virheilmoitus, jos jokin kentistä on tyhjä
+  // Käydään läpi kaikki errorIncomeInputs-kentät ja jokaiselle inputille asetetaan errorElementin tekstiksi errorMessage
+  // ja kutsutaan showError-funktiota, joka näyttää virheilmoituksen
   errorIncomeInputs.forEach((input) => {
     input.errorElement.textContent = input.errorMessage
     showError(input)
@@ -90,7 +142,7 @@ async function addIncome() {
   // Jos jokin kentistä on tyhjä, asetetaan hasIncomeError todeksi
   hasIncomeError = errorIncomeInputs.some((input) => input.hasError)
   
-  // Jos hasIncomeError on tosi kutsutaan addInputListeners-funktiota, joka näyttää virheilmoituksen
+  // Jos hasIncomeError on tosi kutsutaan addInputListeners-funktiota, joka näyttää virheilmoituksen/t
   if (hasIncomeError) {
     addInputListeners(incomeForm, errorIncomeInputs)
     return
@@ -132,28 +184,7 @@ try {
   clearIncomeFields()
 }
 
-// Funktio, joka näyttää virheilmoituksen, jos kenttä on tyhjä
-function showError(errorInput) {
-  if (!errorInput) {
-    // Jos errorInput on tyhjä, lopeta tässä
-    // Näin käy maksun Description-kentän kanssa, koska se ei ole pakollinen eli sille ei ole errorInputia
-    return;
-  }
-
-  const value = errorInput.inputElement ? errorInput.inputElement.value : null;
-  errorInput.hasError = !value;
-
-  if (errorInput.hasError) {
-    // Näytetään virheilmoitus
-    errorInput.errorElement.style.display = 'block';
-  } else {
-    // Piilotetaan virheilmoitus
-    errorInput.errorElement.style.display = 'none';
-  }
-}
-
-
-// Ladataan kaikki tulot tietokannasta, kutsutaan showIncomes-funktiota
+// Haetaan kaikki tulot tietokannasta, kutsutaan showIncomes-funktiota
 async function loadIncomes() {
   try {
     let url = siteUrl + '/incomes';    
@@ -167,12 +198,16 @@ async function loadIncomes() {
 
 // Funktio, joka näyttää tulot käyttäjälle
 function showIncomes(cardContainer = null, filteredIncomes = null) {
+  // Jos cardContainer ei ole null käytetään sitä ja haetaan id:n perusteella paymentCards-elementti
   if (!cardContainer) { cardContainer = document.getElementById('incomeCards')}
   cardContainer.innerHTML = ''
 
-  // Jos filteredIncomes on tyhjä, käytetään newIncomes-muuttujaa
+  // ?? = jos filteredIncomes ei ole null, käytetään sitä, muuten käytetään newIncomes-muuttujaa
+  // Ts. jos on juuri lisätty tuloja, käytetään newIncomes-muuttujaa ja näytetään käyttäjälle vain tämän juuri lisäämät tulot
+  // Jos käytetään filteredIncomes, näytettään käyttäjälle hakutulokset
   const incomes = filteredIncomes ?? newIncomes
-  // Jos tulot-muuttujassa on jotain (sen pituus on isompi kuin 0), käydään läpi jokainen tulo ja luodaan kortti, joka näyttää tulon tiedot
+  // Jos tulot-muuttujassa on jotain (sen pituus on isompi kuin 0), 
+  // käydään läpi jokainen tulo ja luodaan kortti, joka näyttää tulon tiedot
   // Käytetään reverse(), jotta saadaan viimeisin näytettyä ylimmäisenä
   if (incomes.length > 0) {
     incomes.reverse().forEach(income => {
@@ -246,6 +281,7 @@ function deleteIncome(incomeId) {
 // Funktio, jonka avulla voidaan muokata tuloa
 function editIncome(income) {
   // Haetaan incomeForm, jossa on kaikki input-kentät
+  // Asetetaan input-kenttien arvot income-muuttujan arvoiksi
   const incomeForm = document.getElementById('incomeForm')
   incomeForm.income.value = income.income
   incomeForm.netIncome.value = income.netIncome
@@ -256,7 +292,7 @@ function editIncome(income) {
   // Scrollataan sivulla incomeFormin kohdalle
   incomeForm.scrollIntoView({behavior: 'smooth'})
 
-  // Luodaan muuttuja incomeFormButton, joka hakee id:n perusteella incomeFormButton-elementin ja muuttaa siihen teksti "Tallenna muutokset"
+  // Luodaan muuttuja incomeFormButton, joka hakee id:n perusteella incomeFormButton-elementin ja muuttaa siihen tekstiksi "Tallenna muutokset"
   const incomeFormButton = document.getElementById('incomeFormButton')
   incomeFormButton.textContent = 'Tallenna muutokset'
   // Kun painetaan "Tallenna muutokset"-nappia, kutsutaan funktiota updateIncome, joka päivittää tulon
@@ -266,7 +302,7 @@ function editIncome(income) {
       // Jos "Tallenna muutokset", päivitetään tulo
       updateIncome(income._id, incomeForm)
     } else {
-      // Jos lisää tulo, lisätään uusi tulo
+      // Jos muu(add), lisätään uusi tulo
       addIncome()
     }
     // Resetoidaan form, kun tulo on päivitetty/lisätty
@@ -323,31 +359,6 @@ async function updateIncome(incomeId, updatedIncomeData) {
   }
 }
 
-// Funktio checkSearchInputs tarkistaa, ovatko hakukentät tyhjiä
-function checkSearchInputs(searchInputs) {
-  searchInputs.hasError = true
-  searchInputs.inputElements.forEach((input) => {
-    if (input.value) {
-      searchInputs.hasError = false
-    }
-  })
-  // Jos hakukentät tyhjiä, näytetään virheilmoitus
-  if (searchInputs.hasError) {
-    searchInputs.errorElement.style.display = 'block'
-  }
-  else {
-    // Jos haku onnistuu, display = none
-    searchInputs.errorElement.style.display = 'none'
-  }
-}
-
-// Lisätään kuuntelija, joka kutsuu checkSearchInput-funktiota aina kun hakukenttiin syötetään jotain
-function addSearchInputListener(form, searchInputs) {
-  form.addEventListener('input', function (event) {
-    checkSearchInputs(searchInputs)
-  })
-}
-
 // Funktio, joka hakee tulot hakukenttien perusteella
 async function searchIncomes() {
   const incomeSearchForm = document.getElementById('incomeSearchForm')
@@ -356,17 +367,22 @@ async function searchIncomes() {
   const searchResultsList = document.getElementById('searchIncomeResults')
 
   
-   // Jos kenttä/kentät ovat tyhjiä, näytetään virheilmoitus
+   // Jos kenttä/kentät ovat tyhjiä (hasError = true), näytetään virheilmoitus
   const searchIncomeInputs = {inputElements: [incomeSearchForm.incomeCategorySearch, incomeSearchForm.incomeDateSearch], errorElement: document.getElementById('errorIncomeSearch'), errorMessage: 'Valitse kategoria (muu kuin "kaikki") tai päivämäärä tai molemmat', hasError: true }
   searchIncomeInputs.errorElement.textContent = searchIncomeInputs.errorMessage
   checkSearchInputs(searchIncomeInputs)
 
+  // Jos errorIncomeInputs.hasError on true, kutsutaan addSearchInputListener-funktiota,
+  // joka näyttää virheilmoituksen incomeSearchFormissa, searchIncomeInputs-muuttujaan tallennetun errorElementin kohdalla
   if (searchIncomeInputs.hasError) {
     addSearchInputListener(incomeSearchForm, searchIncomeInputs)
     return
   }
 
-  // Jos allIncomes-muuttujassa on jotain, käydään läpi jokainen tulo ja luodaan kortti, joka näyttää tulon tiedot
+  // Jos allIncomes-muuttujassa on jotain, filtteröidään tulot kategorian ja päivämäärän perusteella
+  // Kategoria on tyhjä tai kategoria on sama kuin income.category
+  // Päivämäärä on tyhjä tai päivämäärä on sama kuin income.date
+  // Palautetaan molemmat
   if (allIncomes.length > 0) {
     const filteredIncomes = allIncomes.filter(income => {
       const isMatchingCategory = category === '' || income.category === category
@@ -397,6 +413,7 @@ async function searchIncomes() {
 
 // Lisätään maksu
 async function addPayment() {
+  // Haetaan incomeForm, jossa on kaikki input-kentät ja tallennetaan ne muuuttujiin
   const paymentForm = document.getElementById('paymentForm')
   const amountValue = paymentForm.paymentAmount.value
   const descriptionValue = paymentForm.paymentDescription.value
@@ -413,7 +430,8 @@ async function addPayment() {
   
   let hasPaymentError = false
 
-  // Näytetään virheilmoitus, jos jokin kentistä on tyhjä
+  // Käydään läpi kaikki errorPaymentInputs-kentät ja jokaiselle inputille asetetaan errorElementin tekstiksi errorMessage
+  // ja kutsutaan showError-funktiota, joka näyttää virheilmoituksen
   errorPaymentInputs.forEach((input) => {
     input.errorElement.textContent = input.errorMessage
     showError(input)
@@ -477,12 +495,14 @@ async function loadPayments() {
 
 // Funktio, joka näyttää maksut käyttäjälle
 function showPayments(cardContainer = null, filteredPayments = null) {
-  // Jos cardContainer on tyhjä, käytetään paymentCards-elementtiä
+  // Jos cardContainer ei ole null käytetään sitä ja haetaan id:n perusteella paymentCards-elementti
   if (!cardContainer) { cardContainer = document.getElementById('paymentCards')}
   cardContainer.innerHTML = ''
 
-  // Jos filteredPayments on tyhjä, käytetään newPayments-muuttujaa
-  const payments = filteredPayments ?? newPayments
+   // ?? = jos filteredPayments ei ole null, käytetään sitä, muuten käytetään newPayments-muuttujaa
+    // Ts. jos on juuri lisätty menoja, käytetään newPayments-muuttujaa ja näytetään käyttäjälle vain tämän juuri lisäämät maksut
+  // Jos käytetään filteredPayments, näytettään käyttäjälle hakutulokset
+   const payments = filteredPayments ?? newPayments
   // Jos payments-muuttujassa on jotain (sen pituus on isompi kuin 0)
   // käydään läpi jokainen maksu ja luodaan kortti, joka näyttää maksun tiedot
   if (payments.length > 0) {
@@ -553,7 +573,9 @@ function deletePayment(paymentId) {
 }
 
 // Funktio, jonka avulla voidaan muokata maksua
-function editPayment(payment) {
+function editPayment(payment) {  
+  // Haetaan paymentForm, jossa on kaikki input-kentät
+  // Asetetaan input-kenttien arvot payment-muuttujan arvoiksi
   const paymentForm = document.getElementById('paymentForm')
   paymentForm.paymentAmount.value = payment.amount
   paymentForm.paymentDescription.value = payment.description
@@ -563,7 +585,7 @@ function editPayment(payment) {
   // Scrollataan sivulla paymentFormin kohdalle
   paymentForm.scrollIntoView({behavior: 'smooth'})
 
-  // Luodaan muuttuja paymentFormButton, joka hakee id:n perusteella paymentFormButton-elementin ja muuttaa siihen teksti "Tallenna muutokset"
+  // Luodaan muuttuja paymentFormButton, joka hakee id:n perusteella paymentFormButton-elementin ja muuttaa siihen tekstiksi "Tallenna muutokset"
   const paymentFormButton = document.getElementById('paymentFormButton')
   paymentFormButton.textContent = 'Tallenna muutokset'
   paymentFormButton.onclick = function () {
@@ -645,7 +667,10 @@ async function searchPayments() {
     return
   }
 
-  // Jos allPayments-muuttujassa on jotain, käydään läpi jokainen maksu ja luodaan kortti, joka näyttää maksun tiedot
+    // Jos allPayments-muuttujassa on jotain, filtteröidään maksut kategorian ja päivämäärän perusteella
+  // Kategoria on tyhjä tai kategoria on sama kuin income.category
+  // Päivämäärä on tyhjä tai päivämäärä on sama kuin payment.date
+  // Palautetaan molemmat
   if (allPayments.length > 0) {
     const filteredPayments = allPayments.filter(payment => {
       const isMatchingCategory = category === '' || payment.category === category
