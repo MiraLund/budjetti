@@ -1,8 +1,7 @@
 const express = require('express')
-const asyncErrors = require('express-async-errors')
 const cors = require('cors')
 const app = express()
-const port = process.env.PORT || 10000 //process.env.POR määrittää portin automaattisesti
+const port = process.env.PORT || 10000 //process.env.PORT määrittää portin automaattisesti
 
 app.use(cors())
 
@@ -50,12 +49,9 @@ const Payment = mongoose.model('Payment', paymentSchema)
 // Lisätään tulo
 app.post('/incomes', async (request, response) => {
   try {
-    console.log('Handling income POST request...')
-
     const { income, netIncome, taxRate, category, date } = request.body
     console.log('Request Body:', request.body)
 
-    console.log('Values:', income, netIncome, taxRate, category, date)
     const newIncome = new Income({ income, netIncome, taxRate, category, date })
     const savedIncome = await newIncome.save()
     console.log('Saved Income:', savedIncome)
@@ -81,7 +77,6 @@ app.get('/incomes',  async (request, response) => {
 // Haetaan tuloja hakuehdoilla
 app.get('/incomes/search', async (request, response) => {
   try {
-    console.log('Handling income search request...')
     response.setHeader('Cache-Control', 'no-store')
 
     // Haetaan hakuehdoista vuosi, kuukausi ja kategoria
@@ -120,13 +115,9 @@ app.get('/incomes/search', async (request, response) => {
 
 // Päivitetään tulo
 app.put('/incomes/:id', async (request, response) => {
-  console.log('Handling income PUT request...')
   try {
     const incomeId = request.params.id
     const incomeBody = request.body
-
-    console.log('Updating income with ID:', incomeId)
-    console.log('Received data:', incomeBody)
 
     // Haetaan tulo tietokannasta ja päivitetään se
     const income = await Income.findOneAndUpdate(
@@ -140,7 +131,6 @@ app.put('/incomes/:id', async (request, response) => {
       console.log('Updated income:', income)
       response.json(income)
     } else {
-      console.log('Income not found')
       response.status(404).json({ error: 'Income not found' })
     }
   } catch (error) {
@@ -156,7 +146,6 @@ app.delete('/incomes/:id', async (request, response) => {
     const deletedIncome = await Income.findByIdAndDelete(request.params.id)
     if (deletedIncome) {
       // Jos tulo löytyy, palautetaan se poistoa varten
-      console.log('Deleted income:', deletedIncome)
       response.json(deletedIncome)
     } else {
       response.status(404).json({ error: 'Income not found' })
@@ -196,7 +185,6 @@ app.get('/payments',  async (request, response) => {
 // Haetaan maksut hakuehtojen perusteella
 app.get('/payments/search', async (request, response) => {
   try {
-    console.log('Handling income search request...')
     response.setHeader('Cache-Control', 'no-store')
 
     // Haetaan hakuehdoista vuosi, kuukausi ja kategoria
@@ -236,13 +224,9 @@ app.get('/payments/search', async (request, response) => {
 
 // Päivitetään maksu
 app.put('/payments/:id', async (request, response) => {
-  console.log('Handling payment PUT request...');
   try {
     const paymentId = request.params.id
     const paymentBody = request.body
-
-    console.log('Updating payment with ID:', paymentId)
-    console.log('Received data:', paymentBody)
 
     // Haetaan maksu tietokannasta ja päivitetään se
     const payment = await Payment.findOneAndUpdate(
@@ -257,7 +241,6 @@ app.put('/payments/:id', async (request, response) => {
     if (payment) {
       response.json(payment)
     } else {
-      console.log('Payment not found')
       response.status(404).json({ error: 'Payment not found' })
     }
   } catch (error) {
